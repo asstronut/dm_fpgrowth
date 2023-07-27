@@ -3,7 +3,8 @@ import streamlit as st
 import pandas as pd
 from mlxtend.preprocessing import TransactionEncoder
 
-st.markdown("# Data Preprocessing")
+st.title("Data Preprocessing")
+st.divider()
 st.sidebar.markdown("# Data Preprocessing")
 
 
@@ -35,38 +36,46 @@ def format_data(df: pd.DataFrame):
 
 
 def main():
-    if 'data_trs_1' and 'data_beli_1' and 'data_obat_1' in st.session_state:
-        st.write("## Bentuk Data Awal")
+    st.session_state['data_trs_2'] = prepare_data(
+        st.session_state['data_trs_1'], 'penjualan')
+    st.session_state['data_beli_2'] = prepare_data(
+        st.session_state['data_beli_1'], 'pembelian')
+    st.session_state['data_obat_2'] = prepare_data(
+        st.session_state['data_obat_1'], 'obat')
 
-        st.write("### Data Penjualan")
-        st.dataframe(st.session_state['data_trs_1'].head().set_index(np.arange(1, 6)))
+    st.header("Pemilihan Atribut")
+    st.caption("Bentuk data setelah tahap pemilihan atribut")
 
-        st.write("### Data Pembelian")
-        st.dataframe(st.session_state['data_beli_1'].head().set_index(np.arange(1, 6)))
+    st.subheader("Data Penjualan")
+    st.dataframe(st.session_state['data_trs_2'].head().set_index(np.arange(1, 6)))
+    st.subheader("Data Pembelian")
+    st.dataframe(st.session_state['data_beli_2'].head().set_index(np.arange(1, 6)))
+    st.subheader("Data Obat")
+    st.dataframe(st.session_state['data_obat_2'].head().set_index(np.arange(1, 6)))
 
-        st.write("### Data Obat")
-        st.dataframe(st.session_state['data_obat_1'].head().set_index(np.arange(1, 6)))
+    st.session_state['data_trs_3'], st.session_state['data_trs_3_display'] = format_data(
+        st.session_state['data_trs_2'])
 
-        if st.button("Preprocess Data"):
-            st.session_state['data_trs_2'] = prepare_data(
-                st.session_state['data_trs_1'], 'penjualan')
-            st.session_state['data_beli_2'] = prepare_data(
-                st.session_state['data_beli_1'], 'pembelian')
-            st.session_state['data_obat_2'] = prepare_data(
-                st.session_state['data_obat_1'], 'obat')
-
-            st.write("## Pemilihan Atribut")
-            st.dataframe(st.session_state['data_trs_2'].head().set_index(np.arange(1, 6)))
-            st.dataframe(st.session_state['data_beli_2'].head().set_index(np.arange(1, 6)))
-            st.dataframe(st.session_state['data_obat_2'].head().set_index(np.arange(1, 6)))
-
-            st.session_state['data_trs_3'], df_display_trs = format_data(
-                st.session_state['data_trs_2'])
-
-            st.write('## Pemformatan Data')
-            st.dataframe(df_display_trs.head().set_index(np.arange(1, 6)))
-    else:
-        st.error("Data belum diimport.")
+    st.header('Pemformatan Data')
+    st.caption("Data penjualan setelah tahap pemformatan")
+    st.dataframe(st.session_state['data_trs_3_display'].head().set_index(np.arange(1, 6)))
 
 
-main()
+if 'data_trs_1' and 'data_beli_1' and 'data_obat_1' in st.session_state:
+    st.header("Bentuk Data Awal")
+
+    st.subheader("Data Penjualan")
+    st.dataframe(st.session_state['data_trs_1'].head().set_index(np.arange(1, 6)))
+
+    st.subheader("Data Pembelian")
+    st.dataframe(st.session_state['data_beli_1'].head().set_index(np.arange(1, 6)))
+
+    st.subheader("Data Obat")
+    st.dataframe(st.session_state['data_obat_1'].head().set_index(np.arange(1, 6)))
+
+    # main function for preprocessing data
+    if st.button("Preprocess Data"):
+        main()
+        st.write(":green[**Berhasil preprocessing data.**] :white_check_mark:")
+else:
+    st.error("Data belum diimport.")

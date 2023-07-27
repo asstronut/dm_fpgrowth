@@ -1,14 +1,12 @@
 import streamlit as st
 import pandas as pd
 import warnings
-import re
-import numpy as np
 warnings.filterwarnings('ignore')
-from mining import perform_rule_calculation, compute_association_rule
 
-st.markdown("# Rekomendasi Pengadaan Obat")
-# st.sidebar.markdown("# Main page 🎈")
-
+st.title("Rekomendasi Pengadaan Obat")
+st.divider()
+st.header("Unggah file data")
+st.sidebar.markdown("# Home")
 
 def import_file(file_path):
     try:
@@ -16,7 +14,7 @@ def import_file(file_path):
         df = pd.read_excel(file_path)
 
         # Tampilkan data di Streamlit
-        st.write("**Berhasil import data.**")
+        st.write(":green[**Berhasil import data.**] :white_check_mark:")
 
         return df
 
@@ -27,17 +25,17 @@ def import_file(file_path):
 
 def main():
     uploaded_file = st.file_uploader(
-        "**Unggah file excel data transaksi detail penjualan**", type=["xlsx", "xls"])
+        "**Data transaksi detail penjualan**", type=["xlsx", "xls"])
     if uploaded_file is not None:
         data_trs = import_file(uploaded_file)
 
     uploaded_file = st.file_uploader(
-        "**Unggah file excel data transaksi detail pembelian**", type=["xlsx", "xls"])
+        "**Data transaksi detail pembelian**", type=["xlsx", "xls"])
     if uploaded_file is not None:
         data_beli = import_file(uploaded_file)
 
     uploaded_file = st.file_uploader(
-        "**Unggah file excel data obat**", type=["xlsx", "xls"])
+        "**Data obat**", type=["xlsx", "xls"])
     if uploaded_file is not None:
         data_obat = import_file(uploaded_file)
 
