@@ -8,6 +8,7 @@ st.divider()
 st.header("Unggah file data")
 st.sidebar.markdown("# Home")
 
+
 def import_file(file_path):
     try:
         # Baca file Excel menjadi DataFrame
