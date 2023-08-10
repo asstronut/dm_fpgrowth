@@ -6,6 +6,11 @@ from mlxtend.preprocessing import TransactionEncoder
 st.title("Data Preprocessing")
 st.divider()
 st.sidebar.markdown("# Data Preprocessing")
+st.sidebar.markdown(
+    """Halaman ini berisi fungsionalitas untuk melakukan preprocessing data. 
+    Preprocessing data bertujuan untuk mempersiapkan data ke bentuk yang bisa diolah
+    pada tahapan selanjutnya, yaitu tahapan modeling."""
+)
 
 
 def prepare_data(df: pd.DataFrame, file_data):
@@ -76,6 +81,6 @@ if 'data_trs_1' and 'data_beli_1' and 'data_obat_1' in st.session_state:
     # main function for preprocessing data
     if st.button("Preprocess Data"):
         main()
-        st.write(":green[**Berhasil preprocessing data.**] :white_check_mark:")
+        st.success("Berhasil preprocessing data :white_check_mark:")
 else:
     st.error("Data belum diimport.")

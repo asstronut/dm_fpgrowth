@@ -7,6 +7,12 @@ st.title("Rekomendasi Pengadaan Obat")
 st.divider()
 st.header("Unggah file data")
 st.sidebar.markdown("# Home")
+st.sidebar.markdown(
+    """
+    Pada halaman ini user dapat mengunggah file excel berisi data-data yang dibutuhkan, \
+    yaitu data penjualan, data pembelian, dan data obat.
+    """
+)
 
 
 def import_file(file_path):
@@ -15,7 +21,7 @@ def import_file(file_path):
         df = pd.read_excel(file_path)
 
         # Tampilkan data di Streamlit
-        st.write(":green[**Berhasil import data.**] :white_check_mark:")
+        st.success("Berhasil import data :white_check_mark:")
 
         return df
 
