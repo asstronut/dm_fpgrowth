@@ -83,10 +83,10 @@ def display_recommendation(return_rules: pd.DataFrame, data_obat: pd.DataFrame, 
             consequent_restock.append(jml_restock_obat)
 
     # assign list berisi jumlah restock setiap obat ke tabel
-    return_rules['antecedent restock bulan lalu'] = [3, 3]
-    return_rules['consequent restock bulan lalu'] = [35, 18]
-    # return_rules['antecedent restock bulan lalu'] = antecedents_restock
-    # return_rules['consequent restock bulan lalu'] = consequent_restock
+    # return_rules['antecedent restock bulan lalu'] = [3, 3]
+    # return_rules['consequent restock bulan lalu'] = [35, 18]
+    return_rules['antecedent restock bulan lalu'] = antecedents_restock
+    return_rules['consequent restock bulan lalu'] = consequent_restock
 
     # mendapatkan nilai rekomendasi restock setiap obat
     return_rules['rekomendasi restock'] = np.max(
@@ -118,19 +118,20 @@ def display_recommendation(return_rules: pd.DataFrame, data_obat: pd.DataFrame, 
     res1 = return_rules.drop(['confidence'], axis=1)
     # rename kolom
     res1.columns = [
-        'Item 1', 'Item 2',
+        'Kode Item 1', 'Kode Item 2',
         'Item 1 restok bulan lalu', 'Item 2 restok bulan lalu',
         'Rekomendasi restok',
-        'Nama 1', 'Nama 2']
+        'Item 1', 'Item 2']
     # hapus kolom
-    res1 = res1[['Nama 1', 'Nama 2', 'Item 1 restok bulan lalu', 'Item 2 restok bulan lalu', 'Rekomendasi restok']]
+    res1 = res1[['Item 1', 'Item 2', 'Item 1 restok bulan lalu', 'Item 2 restok bulan lalu', 'Rekomendasi restok']]
 
-    # mengubah 2 kolom menjadi 1 kolom
+    # mengubah 2 kolom menjadi 1 kolom dan mengubah nama kolom
     res3 = pd.concat([
         return_rules[['item 1', 'nama 1', 'rekomendasi restock']].rename(
-            columns={'item 1': 'Item', 'nama 1': 'Nama', 'rekomendasi restock': 'Rekomendasi restok'}),
+            columns={'item 1': 'Kode Item', 'nama 1': 'Nama Item', 'rekomendasi restock': 'Rekomendasi restok'}),
+        
         return_rules[['item 2', 'nama 2', 'rekomendasi restock']].rename(
-            columns={'item 2': 'Item', 'nama 2': 'Nama', 'rekomendasi restock': 'Rekomendasi restok'})
+            columns={'item 2': 'Kode Item', 'nama 2': 'Nama Item', 'rekomendasi restock': 'Rekomendasi restok'})
     ])
 
     # ambil data stok obat sekarang
@@ -143,7 +144,8 @@ def display_recommendation(return_rules: pd.DataFrame, data_obat: pd.DataFrame, 
     res3['Jumlah restok'] = res3['Rekomendasi restok'] - res3['Stok sekarang']
 
     # atur urutan kolom
-    res3 = res3[['Item', 'Nama', 'Rekomendasi restok', 'Stok sekarang', 'Jumlah restok']]
+    res3 = res3[['Kode Item', 'Nama Item', 'Rekomendasi restok', 'Stok sekarang', 'Jumlah restok']].reset_index(drop=True)
+    res3.index = res3.index + 1
 
     return res1, res3
 
@@ -156,7 +158,8 @@ def main():
         st.session_state['data_trs_3'], st.session_state['data_trs_2'])
     return_rules = eval_fpgrowth(fpgrowth_matrix)
     # st.dataframe(return_rules)
-    res1, res2 = display_recommendation(return_rules, st.session_state['data_obat_1'], st.session_state['data_beli_2'])
+    res1, res2 = display_recommendation(
+        return_rules, st.session_state['data_obat_1'], st.session_state['data_beli_2'])
     st.subheader("Hubungan Asosiatif Antar Obat")
     st.dataframe(res1)
     st.subheader("Hasil Rekomendasi Pengadaan Obat")
@@ -170,5 +173,8 @@ try:
     if st.button("Mining"):
         main()
 except KeyError:
-    st.error("Data belum tersedia")
+    if 'data_trs_1' and 'data_beli_1' and 'data_obat_1' in st.session_state:
+        st.error("Data belum dilakukan preprocessing")
+    else:
+        st.error("Tidak ada data yang diunggah atau data belum diunggah sepenuhnya")
     st.stop()

@@ -67,20 +67,23 @@ def main():
 
 
 if 'data_trs_1' and 'data_beli_1' and 'data_obat_1' in st.session_state:
-    st.header("Bentuk Data Awal")
+    try:
+        st.header("Bentuk Data Awal")
 
-    st.subheader("Data Penjualan")
-    st.dataframe(st.session_state['data_trs_1'].head().set_index(np.arange(1, 6)))
+        st.subheader("Data Penjualan")
+        st.dataframe(st.session_state['data_trs_1'].head().set_index(np.arange(1, 6)))
 
-    st.subheader("Data Pembelian")
-    st.dataframe(st.session_state['data_beli_1'].head().set_index(np.arange(1, 6)))
+        st.subheader("Data Pembelian")
+        st.dataframe(st.session_state['data_beli_1'].head().set_index(np.arange(1, 6)))
 
-    st.subheader("Data Obat")
-    st.dataframe(st.session_state['data_obat_1'].head().set_index(np.arange(1, 6)))
+        st.subheader("Data Obat")
+        st.dataframe(st.session_state['data_obat_1'].head().set_index(np.arange(1, 6)))
 
-    # main function for preprocessing data
-    if st.button("Preprocess Data"):
-        main()
-        st.success("Berhasil preprocessing data :white_check_mark:")
+        # main function for preprocessing data
+        if st.button("Preprocess Data"):
+            main()
+            st.success("Berhasil preprocessing data :white_check_mark:")
+    except:
+        st.error("Data tidak valid")
 else:
-    st.error("Data belum diimport.")
+    st.error("Tidak ada data yang diunggah atau data belum diunggah sepenuhnya")
